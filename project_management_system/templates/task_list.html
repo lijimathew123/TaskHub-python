@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task List</title>
+</head>
+<body>
+    {% block content %}
+    {% include 'inner_header.html' %}
+
+    <div style="text-align: center;">
+        <h2 style="margin-top: 20px;margin-bottom: 30px;">Task List - {{ group.name }}</h2>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px auto; max-width: 800px; background-color: #f2f2f2; border: 1px solid #ccc; border-radius: 5px;">
+            <thead style="background-color: #4CAF50; color: #fff;">
+                <tr>
+                    <th style="padding: 10px;">Task Title</th>
+                    <th style="padding: 10px;">Description</th>
+                    <th style="padding: 10px;">Assigned To</th>
+                    <th style="padding: 10px;">Designation</th>
+                    <th style="padding: 10px;">Due Date</th>
+                    <th style="padding: 10px;">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td style="padding: 10px;">{{ task.title }}</td>
+                    <td style="padding: 10px;">{{ task.description }}</td>
+                    <td style="padding: 10px;">{{ task.assigned_to.name }}</td>
+                    <td style="padding: 10px;">{{ task.assigned_to.role }}</td>
+                    <td style="padding: 10px;">{{ task.due_date }}</td>
+                    <td style="padding: 10px;"><a href="{% url 'edit_task' task.id employee.id %}" style="background-color: #4CAF50; color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px;">Edit</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 10px;">No tasks found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="javascript:history.back()" class="btn btn-secondary mt-3" style="display: inline-block; color: #333; text-decoration: none; padding: 10px 20px; border: 1px solid #ccc; border-radius: 5px; margin-top: 20px;">Back</a>
+{% endblock %}
+</body>
+</html>

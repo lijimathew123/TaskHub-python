@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Groups</title>
+</head>
+<body>
+    {% block content %}
+    {% include 'inner_header.html' %}
+    
+    <h2 style="text-align: center; margin-top: 30px; margin-bottom: 20px; font-weight: 700;">My Groups</h2>
+    
+    <div style="margin: 0 30px;">
+        <table style="border-collapse: collapse; width: 100%; border: 1px solid #ccc;">
+            <thead>
+                <tr>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Group Name</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Members and Tasks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+                    <tr>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ group.name }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">
+                            {% if group.developers.all %}
+                                {% for developer in group.developers.all %}
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>{{ developer.name }}</strong>
+                                        {% if developer.task_set.all %}
+                                            {% for task in developer.task_set.all %}
+                                                <span style="display: inline-block; margin-right: 10px; padding: 5px 10px; background-color: #f2f2f2; border: 1px solid #ccc; border-radius: 5px;">{{ task.title }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>No tasks assigned.</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                No members and tasks found.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2" style="padding: 12px; border-bottom: 1px solid #ddd;">No groups found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="javascript:history.back()" style="display: inline-block; background-color: #dad7d7; color: #333; text-decoration: none; padding: 10px 20px; border: 1px solid #ccc; border-radius: 5px; margin-top: 20px;">Back</a>
+
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Task</title>
+</head>
+<body>
+    {% block content %}
+
+    {% include 'inner_header.html' %}
+    
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Edit Task - {{ task.title }}</h2>
+        <form method="POST" class="p-4" style="background-color: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            {% csrf_token %}
+             
+          
+
+            <div class="row mb-3">
+                <label for="task_title" class="col-sm-2 col-form-label">Task Title:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="task_title" name="title" value="{{ task.title }}" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="description" class="col-sm-2 col-form-label">Description:</label>
+                <div class="col-sm-10">
+                    <textarea id="description" name="description"  class="form-control" required>{{ task.description }}</textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="due_date" class="col-sm-2 col-form-label">Due Date:</label>
+                <div class="col-sm-10">
+                    <input type="date" id="due_date" name="due_date" value="{{ task.due_date }}" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="priority" class="col-sm-2 col-form-label">Priority:</label>
+                <div class="col-sm-10">
+                    <select id="priority" name="priority" class="form-control" required>
+                        <option value="High" {% if task.priority == 'High' %}selected{% endif %}>High</option>
+                        <option value="Medium" {% if task.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="Low" {% if task.priority == 'Low' %}selected{% endif %}>Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="status" class="col-sm-2 col-form-label">Status:</label>
+                <div class="col-sm-10">
+                    <select id="status" name="status" class="form-control" required>
+                        {% for choice in form.status.field.choices %}
+                            <option value="{{ choice.0 }}" {% if choice.0 == task.status %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="assigned_developer" class="col-sm-2 col-form-label">Assigned Developer:</label>
+                <div class="col-sm-10">
+                    <select id="assigned_developer" name="assigned_to" class="form-control" required>
+                        {% for developer in developers %}
+                            <option value="{{ developer.id }}" {% if developer.id == task.assigned_to.id %}selected{% endif %}>{{ developer.name }} ({{ developer.domain }}) ({{ developer.technologies_used }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">Update Task</button>
+        </form>
+    </div>
+
+    <a href="javascript:history.back()" class="btn btn-secondary mt-3">Back</a>
+    {% endblock %}
+</body>
+</html>

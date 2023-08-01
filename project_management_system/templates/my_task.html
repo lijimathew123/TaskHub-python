@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Tasks</title>
+</head>
+<body>
+    {% block content %}
+    {% include 'inner_header.html' %}
+    
+    <h2 style="text-align: center; margin-top: 50px; margin-bottom: 30px; font-weight: 700;">My Tasks</h2>
+    
+    <div style="margin-top: 30px; margin-bottom: 50px;">
+    
+
+        
+        <table style="border-collapse: collapse; width: 100%; border: 2px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Title</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Group</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Status</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Due Date</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.title }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.group.name }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.status }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.due_date }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">
+                            <form method="POST" action="{% url 'update_task' employee.id task.id %}">
+                                {% csrf_token %}
+                                <select name="status" style="padding: 6px; border-radius: 4px;">
+                                    <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                    <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                </select>
+                                <button type="submit" style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" style="padding: 12px; border-bottom: 1px solid #ddd;">No tasks found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+</body>
+</html>

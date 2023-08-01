@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Developers</title>
+</head>
+<body>
+    {% block content %}
+    {% load static %}
+    {% include 'inner_header.html' %}
+
+    <h2 style="text-align: center; margin-bottom: 30px; margin-top: 50px; padding-top: 20px;font-weight: 700;">All Members</h2>
+    <div class="search-container" style="text-align: right; margin-bottom: 20px;">
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for names.." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; width: 200px;">
+        <button type="button" style="padding: 8px 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+    </div>
+
+    <table id="developerTable" style="border-collapse: collapse; width: 90%; margin: 0 auto; border: 1px solid #ddd;">
+        <thead>
+            <tr>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Profile</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Name</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Email</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Role</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Domain</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f2f2f2; color: #333;">Technologies Used</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employee %}
+                <tr>
+                    <td class="profile-pic" style="padding: 12px; border-bottom: 1px solid #ddd;">
+                        {% if employee.profile_image %}
+                            <img src="{{ employee.profile_image.url }}" alt="Profile Picture" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                        {% else %}
+                            <!-- You can add a default placeholder image here -->
+                            <img src="{% static 'images\default-profile.png' %}" alt="" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ employee.name }}</td>
+                    <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ employee.email }}</td>
+                    <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ employee.role }}</td>
+                    <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ employee.domain }}</td>
+                    <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ employee.technologies_used }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" style="padding: 12px; border-bottom: 1px solid #ddd;">No  employee found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        function searchTable() {
+            // Declare variables
+            var input, filter, table, tr, td, th, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("developerTable");
+            tr = table.getElementsByTagName("tr");
+    
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "none"; // Hide all rows by default
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = ""; // Show the row if any cell contains the search query
+                            break; // Break the inner loop to avoid hiding the row again
+                        }
+                    }
+                }
+            }
+    
+            // Show the matching column headers
+            th = table.getElementsByTagName("th");
+            for (i = 0; i < th.length; i++) {
+                txtValue = th[i].textContent || th[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    th[i].style.display = ""; // Show the column header if it contains the search query
+                } else {
+                    th[i].style.display = "none"; // Hide the column header if it doesn't contain the search query
+                }
+            }
+        }
+    </script>
+    
+    
+    {% endblock %}
+</body>
+</html>
