@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Task</title>
+</head>
+<body>
+    {% block content %}
+
+    {% include 'inner_header.html' %}
+    
+    <h2>Create Task</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create</button>
+    </form>
+    <a href="javascript:history.back()">Back</a>
+    {% endblock %}
+</body>
+</html>

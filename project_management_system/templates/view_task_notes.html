@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Task Notes</title>
+</head>
+<body>
+    {% block content %}
+    {% include 'inner_header.html' %}
+
+    <h2 style="text-align: center; margin-top: 50px; margin-bottom: 30px; font-weight: 700;">Task Notes</h2>
+    <div style="margin:20px 10px">
+    <ul style="list-style: none; padding-left: 0;">
+        {% for note in notes %}
+            <li style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">{{ note.note }}</li>
+        {% empty %}
+            <li style="text-align: center;">No notes found for this task.</li>
+        {% endfor %}
+    </ul>
+    
+    </div>
+
+    <a href="javascript:history.back()" class="btn btn-secondary mt-3">Back</a>
+    {% endblock %}
+</body>
+</html>

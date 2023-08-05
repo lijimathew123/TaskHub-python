@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Tasks</title>
+</head>
+<body>
+    {% block content %}
+    {% include 'inner_header.html' %}
+    
+    <h2 style="text-align: center; margin-top: 50px; margin-bottom: 30px; font-weight: 700;">My Tasks</h2>
+    
+    <div style="margin-top: 30px; margin-bottom: 50px; margin-left: 20px; margin-right: 20px;">
+        <input type="text" id="searchInput" placeholder="Search..." style="margin: 20px; width: 300px;">
+        <br>
+        <label for="statusFilter" style="margin-left: 20px;">Filter by Status:</label>
+        <select id="statusFilter" onchange="filterTasks()">
+            <option value="">All</option>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+        <br><br>
+
+        <table style="border-collapse: collapse; width: 100%; border: 2px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Title</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Group</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Status</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Due Date</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Update Status</th>
+                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr class="taskRow">
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.title }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.group.name }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.status }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">{{ task.due_date }}</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">
+                            <form method="POST" action="{% url 'update_task' employee.id task.id %}">
+                                {% csrf_token %}
+                                <select name="status" style="padding: 6px; border-radius: 4px;">
+                                    <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                    <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                </select>
+                                <button type="submit" style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Update</button>
+                               
+                               
+
+                            </form>
+                        </td>
+                        <td>
+                            <button style="background-color: #4CAF50; color: #f2f2f2;" type="button" class="btn" onclick="openNoteModal('noteModal{{ task.id }}')">ADD NOTE</button>
+                            <div id="noteModal{{ task.id }}" class="modal">
+                              <div class="modal-content">
+                                <span class="close" onclick="closeNoteModal('noteModal{{ task.id }}')">&times;</span>
+                                <h3>Add Note</h3>
+                                <form method="POST" action="{% url 'add_task_note'  employee.id task.id %}">
+                                  {% csrf_token %}
+                                  <textarea name="note" rows="4" cols="50" required></textarea>
+                                  <br>
+                                  <button  class="btn btn-success" type="submit">Save</button>
+                                </form>
+                              </div>
+                            </div>
+                            <a class="btn" style="background-color: #4CAF50; color: #ffffff;" href="{% url 'view_task_notes' task.id %}">
+                                VIEW NOTE
+                            </a>
+                        </td>
+                       
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" style="padding: 12px; border-bottom: 1px solid #ddd;">No tasks found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to handle the search functionality
+        function searchTasks() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementsByTagName("table")[0];
+            tr = table.getElementsByClassName("taskRow");
+
+            for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Function to handle the status filter functionality
+        function filterTasks() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("statusFilter");
+            filter = input.value.toLowerCase();
+            table = document.getElementsByTagName("table")[0];
+            tr = table.getElementsByClassName("taskRow");
+
+            for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "table-row";
+                td = tr[i].getElementsByTagName("td")[2]; // 2nd column (Status column)
+                if (filter && td) {
+                    if (td.textContent.toLowerCase() !== filter.toLowerCase()) {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Attach event listener to the search input
+        document.getElementById("searchInput").addEventListener("keyup", searchTasks);
+        // Attach event listener to the status filter
+        document.getElementById("statusFilter").addEventListener("change", filterTasks);
+
+
+        // Function to show the modal
+  function openNoteModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "block";
+  }
+
+  // Function to hide the modal
+  function closeNoteModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "none";
+  }
+
+      // Function to view task notes
+      function viewTaskNotes(taskId) {
+        openNoteModal('noteModal' + taskId);
+    }
+
+    
+ </script>
+
+    {% endblock %}
+</body>
+</html>

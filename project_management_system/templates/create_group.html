@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Group</title>
+</head>
+<body>
+    {% block content %}
+
+    {% include 'inner_header.html' %}
+    
+<h2 style="text-align: center; margin-top: 30px; margin-bottom: 20px; font-weight: 700;">Create Group</h2>
+    
+<div style="margin-left: 20px; margin-right: 20px;">
+<form method="POST" action="{% url 'create_group' employee.id %}">
+     {% csrf_token %}
+     <label for="name" style="font-weight: 600;">Group Name:</label>
+     <input type="text" id="group_name" name="name" required style="padding: 6px; border-radius: 4px; width: 100%;"><br><br>
+        
+       
+
+<h3 style="font-weight: 700;">Project Developers:</h3>
+<input type="text" id="search_name_email" placeholder="Search by name or email" style="padding: 6px; border-radius: 4px; width: 100%; margin-bottom: 10px;">
+<input type="text" id="search_technology" placeholder="Search by technology used" style="padding: 6px; border-radius: 4px; width: 100%; margin-bottom: 10px;">
+<input type="text" id="search_domain" placeholder="Search by domain" style="padding: 6px; border-radius: 4px; width: 100%; margin-bottom: 10px;">
+
+<table id="developer_table" style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">
+    <thead>
+        <tr style="background-color: #f2f2f2;">
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Select</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Name</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Email</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Role</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Domain</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Technologies Used</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Availability</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for developer in developers %}
+            <tr class="developer-details">
+                <td><input type="checkbox" name="developers" value="{{ developer.id }}"></td>
+                <td>{{ developer.name }}</td>
+                <td>{{ developer.email }}</td>
+                <td>{{ developer.role }}</td>
+                <td>{{ developer.domain }}</td>
+                <td>{{ developer.technologies_used }}</td>
+                <td>{{ developer.availability }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+            
+ <button type="submit" style="margin-top: 20px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Create group</button>
+</form>
+ <a href="javascript:history.back()" class="btn" style="background-color: rgb(161, 162, 163);  margin-top: 20px; text-decoration: none; color: #09275e; font-weight: 600;">Back</a>
+    </div>
+
+    <script>
+        // Function to filter developers based on the search box values
+        const filterDevelopers = () => {
+            const nameEmailFilter = document.getElementById("search_name_email").value.toLowerCase();
+            const technologyFilter = document.getElementById("search_technology").value.toLowerCase();
+            const domainFilter = document.getElementById("search_domain").value.toLowerCase();
+            const developers = document.getElementsByClassName("developer-details");
+            
+            for (const developer of developers) {
+                const name = developer.getElementsByTagName("td")[1].innerText.toLowerCase();
+                const email = developer.getElementsByTagName("td")[2].innerText.toLowerCase();
+                const domain = developer.getElementsByTagName("td")[4].innerText.toLowerCase();
+                const technologies = developer.getElementsByTagName("td")[5].innerText.toLowerCase();
+                
+                const isNameEmailMatch = name.includes(nameEmailFilter) || email.includes(nameEmailFilter);
+                const isTechnologyMatch = technologies.includes(technologyFilter);
+                const isDomainMatch = domain.includes(domainFilter);
+                
+                if (isNameEmailMatch && isTechnologyMatch && isDomainMatch) {
+                    developer.style.display = "";
+                } else {
+                    developer.style.display = "none";
+                }
+            }
+        };
+
+        // Event listeners for input changes
+        document.getElementById("search_name_email").addEventListener("input", filterDevelopers);
+        document.getElementById("search_technology").addEventListener("input", filterDevelopers);
+        document.getElementById("search_domain").addEventListener("input", filterDevelopers);
+    </script>
+
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Group Detail</title>
+</head>
+<body>
+    {% block content %}
+
+    {% include 'inner_header.html' %}
+    
+    <h2 style="text-align: center; margin-top: 30px; margin-bottom: 20px; font-weight: 700;">Group Detail</h2>
+
+    <div style="margin-left: 20px; margin-right: 20px;">
+        <p><strong>Group Name:</strong> {{ group.name }}</p>
+        
+        <table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Name</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Email</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Role</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Domain</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">technologies_used</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for developer in group.developers.all %}
+                <tr>
+                    <td style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{{ developer.name }}</td>
+                    <td style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{{ developer.email }}</td>
+                    <td style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{{ developer.role }}</td>
+                    <td style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{{ developer.domain }}</td>
+                    <td style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{{ developer.technologies_used}}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="padding: 8px; border-bottom: 1px solid #ddd;">No developers assigned to this group.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; margin-top: 20px;">
+            <a href="{% url 'assign_task' employee.id %}" style="margin-right: 10px; text-align: center; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none;">Assign Task</a>            
+        
+            <a href="{% url 'delete_group'  group.id employee.id %}" style="margin-right: 10px; text-align: center; padding: 8px 16px; background-color: #ac0a0a; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; class="btn btn-danger"> Delete Group</a>
+             
+             
+        </div>
+
+        <form method="POST" action="{% url 'add_member' group.id employee.id %}" class="mt-5 mb-5">
+            {% csrf_token %}
+            <label for="developer">Add Developer:</label>
+            <select name="developer" id="developer">
+                {% for developer in developers %}
+                    <option value="{{ developer.id }}">{{ developer.name }} ({{ developer.domain }}) ({{ developer.technologies_used}})</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success mx-4">Add Member</button>
+        </form>
+
+        
+
+        <a href="javascript:history.back()" style=" margin-top: 50px; background-color:gray; text-align: center; padding: 8px 16px; text-decoration: none; color: #09275e; font-weight: 600; border-radius:5px">Back</a>
+    </div>
+
+    {% endblock %}
+</body>
+</html>
