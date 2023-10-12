@@ -13,11 +13,15 @@ Django 3.x
 SQLite
 ##3. Installation
 
-git clone https://github.com/your-username/your-project.git
+git clone https://github.com/lijimathew123/TaskHub-python.git
 cd your-project
+
  Create a virtual environment:
 python -m venv venv
 source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+
+
+Install dependancies:
 ##4. Run the development server:
 python manage.py runserver
 
