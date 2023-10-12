@@ -11,6 +11,8 @@ Before you begin, ensure you have met the following requirements:
 Python 3.8 or later
 Django 3.x
 SQLite
+
+
 ##3. Installation
 
 git clone https://github.com/lijimathew123/TaskHub-python.git
@@ -22,6 +24,8 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 
 
 Install dependancies:
+
+
 ##4. Run the development server:
 python manage.py runserver
 
