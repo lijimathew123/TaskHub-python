@@ -16,6 +16,7 @@ SQLite
 ##3. Installation
 
 git clone https://github.com/lijimathew123/TaskHub-python.git
+
 cd your-project
 
  Create a virtual environment:
